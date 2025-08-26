@@ -64,7 +64,7 @@ while (i < 1:nrow(data_weekly) - window_size + 1) {
   #store values in the empty vector
   moving_avg[i] <- interval_avg
   
-  #return output in dataframe
+  #return output as new column in dataframe
   print()
   # Shift the starting value in interval to the right by one position
   i + 1
