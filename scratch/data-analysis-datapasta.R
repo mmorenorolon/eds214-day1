@@ -54,7 +54,7 @@ ma_width <- 9
 
 i <- 1
   # a loop to iterate through every moving 9 weeks.
-
+moving_fun <- function(x, w, mean)
 for (i in 1:nrow(length(data_weekly)) - ma_width +1) {
   
   #Attempting to store the elements in the dataframe to call the interval we want
