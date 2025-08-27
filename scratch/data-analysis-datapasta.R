@@ -1,12 +1,13 @@
 source("R/moving_average.R")
-#load packages
+
+# Load packages
 library(stringr)
 library(lubridate)
 library(tidyverse)
 library(here)
 library(janitor)
 
-#read in data
+# In data
 
 Q1_raw <- read_csv(here("data", "QuebradaCuenca1-Bisley.csv"),
                na = c("", "NA", "NULL"))
@@ -17,10 +18,10 @@ Q3_raw <- read_csv(here("data", "QuebradaCuenca3-Bisley.csv"),
 PRM_raw <- read_csv(here("data", "RioMameyesPuenteRoto.csv"),
                     na = c("", "NA", "NULL"))
 
-#Join the data
+# Join the data
 data_joined <- bind_rows(list(Q1_raw, Q2_raw, Q3_raw, PRM_raw))
 
-#clean the data
+# Clean the data
 
         #defining column list to pivot longer
 parameters <- c("NO3-N", "K", "Mg", "Ca", "NH4-N")
@@ -40,47 +41,21 @@ data_clean <- data_joined %>%
   clean_names() 
     #I want to move the new columns after the sample_date column
 
-#Calculate the weekly average of each parameter by stream
-data_weekly <- data_clean %>% 
-  group_by(sample_id, parameter, sample_week) %>% 
-  summarise(weekly_mean = round(mean(concentration, na.rm = TRUE), 2)) %>% 
-  ungroup()
+# Function
 
-#approach 1 to calculating moving average:
-
-  #create an empty column to store in 
-moving_avg <- vector(mode = "numeric", length = length(data_weekly))
-  #defining moving average width f 9 weeks
 window_size <- 9
 
-i <- 1 #starting index
+moving_avg <- function(conc, date, focal_date, window_size){
   
-  # a loop to iterate through every moving 9 weeks.
+  in_window <- (dates > focal_date - (window_size/2)* 7) &
+    (dates < focal_date + (window_size/2)*7) 
+  
+  window_conc
+}
 
-for (i in (1:length(data_weekly) - window_size + 1)) {
-  
-  window <- data_weekly$weekly_mean[i : i + window_size]
-  #Attempting to calculate the moving average
-  #the elements in the dataframe to call the interval we want
-  window_avg <- round(sum(window[i:i + window_size], 
-                          na.rm = TRUE) / 
-                            window_size, 2)
-  
-  #store values in the empty vector
-  data_weekly$moving_avg[i] <- window_avg
-  
-  # Shift the starting value in interval to the right by one position
-  i + 1
-  
-  print(moving_avg)
-} 
 
-# Approach 2 to calculating moving average
-library(zoo)
-
-data_weekly %>% 
-  rollmean(data_weekly$k = 9, fill = , align = "left")
-
-# Approach 3
+subset for plotting
+ %>% 
+  
 
 
