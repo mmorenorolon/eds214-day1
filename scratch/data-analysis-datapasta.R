@@ -48,27 +48,38 @@ data_weekly <- data_clean %>%
 #approach 1 to calculating moving average:
 
   #create an empty column to store in 
+moving_avg <- vector(mode = "numeric", length = length(data_weekly))
   #defining moving average width f 9 weeks
 window_size <- 9
 
-i <- 1
+i <- 1 #starting index
+  
   # a loop to iterate through every moving 9 weeks.
 
-while (i < 1:nrow(data_weekly) - window_size + 1) {
+for (i in (1:length(data_weekly) - window_size + 1)) {
   
+  window <- data_weekly$weekly_mean[i : i + window_size]
   #Attempting to calculate the moving average
   #the elements in the dataframe to call the interval we want
-  window_avg <- round(sum(data_weekly$weekly_mean[i:i + window_size], 
+  window_avg <- round(sum(window[i:i + window_size], 
                           na.rm = TRUE) / 
                             window_size, 2)
   
   #store values in the empty vector
-  moving_avg[i] <- interval_avg
+  data_weekly$moving_avg[i] <- window_avg
   
-  #return output as new column in dataframe
-  print()
   # Shift the starting value in interval to the right by one position
   i + 1
+  
+  print(moving_avg)
 } 
 
-   
+# Approach 2 to calculating moving average
+library(zoo)
+
+data_weekly %>% 
+  rollmean(data_weekly$k = 9, fill = , align = "left")
+
+# Approach 3
+
+
