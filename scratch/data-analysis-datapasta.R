@@ -1,3 +1,5 @@
+source("R/moving_average.R")
+
 # Load packages
 library(stringr)
 library(lubridate)
