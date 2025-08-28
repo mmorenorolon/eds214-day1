@@ -1,0 +1,29 @@
+---
+title: "Hurricane Disturbance and Stream Chemistry"
+author: "Melannie Moreno Rolon"
+format: html
+execute: 
+  echo: true
+  warning: false
+  message: false
+---
+
+# Setup
+
+```{r}
+source("environment/install_packages.R")
+source("scripts/01_clean_data.R")
+source("scripts/02_moving_avg.R")
+source("scripts/utils_plotting.R")
+```
+
+# Import raw dataset
+
+```{r}
+# Import raw datasets
+q1 <- read_csv(here("raw_data", "QuebradaCuenca1-Bisley.csv"), na = "NA")
+q2 <- read_csv(here("raw_data", "QuebradaCuenca2-Bisley2.csv"), na = "NA")
+q3 <- read_csv(here("raw_data", "QuebradaCuenca3-Bisley.csv"), na = "NA")
+mpr <- read_csv(here("raw_data", "RioMameyesPuenteRoto.csv"), na = "NA")
+```
+
