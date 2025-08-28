@@ -9,17 +9,16 @@ library(janitor)
 
 # In data
 
-Q1_raw <- read_csv(here("data", "QuebradaCuenca1-Bisley.csv"),
-               na = c("", "NA", "NULL"))
-Q2_raw <- read_csv(here("data", "QuebradaCuenca2-Bisley.csv"),
+q1_raw <- read_csv(here("raw_data", "QuebradaCuenca1-Bisley.csv"))
+q2_raw <- read_csv(here("raw_data", "QuebradaCuenca2-Bisley.csv"),
                    na = c("", "NA", "NULL"))
-Q3_raw <- read_csv(here("data", "QuebradaCuenca3-Bisley.csv"),
+q3_raw <- read_csv(here("raw_data", "QuebradaCuenca3-Bisley.csv"),
          na = c("", "NA", "NULL"))
-PRM_raw <- read_csv(here("data", "RioMameyesPuenteRoto.csv"),
+prm_raw <- read_csv(here("raw_data", "RioMameyesPuenteRoto.csv"),
                     na = c("", "NA", "NULL"))
 
 # Join the data
-data_joined <- bind_rows(list(Q1_raw, Q2_raw, Q3_raw, PRM_raw))
+data_joined <- bind_rows(list(q1_raw, q2_raw, q4_raw, prm_raw))
 
 # Clean the data
 
@@ -40,6 +39,15 @@ data_clean <- data_joined %>%
          sample_week = paste0(year, "_", week_number)) %>% 
   clean_names() 
     #I want to move the new columns after the sample_date column
+
+#q1
+q2_raw %>% 
+  select(Sample_ID, Sample_Date, K, Mg, Ca, `NH4-N`, `NO3-N`) %>% 
+  pivot_longer(cols = c(K, Mg, Ca, `NH4-N`, `NO3-N`), names_to = "stream_ion", 
+               values_to = "ion_conc") %>%
+  mutate(Sample_Date = as.Date(Sample_Date)) %>%
+  filter(!is.na(ion_conc), ion_conc >= 0) %>% 
+  clean_names()
 
 # Function
 

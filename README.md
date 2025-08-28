@@ -17,7 +17,6 @@
 #### - Quarto report to integrate code and visualization
 #### - Reproduction of Figure 3 from Schaefer et al. (2000)
 #### - Folder structure for reproducible analysis
-#### - Setup script for package installation
 
 ### Repository Structure
 ```
@@ -29,13 +28,15 @@
     - flowchart.png
   - output/
     -plotted_figure3.png
-  - packages/
-    - install_packages.R
   - processed_data
+    - mpr_clean.csv
+    - q1_clean.csv
+    - q2_clean.csv
+    - q3_clean.csv
   - R/
     - 01_clean_data.R
     - 02_moving_avg.R
-    - utils_plotting.R
+    - plotting.R
   - raw_data/
     - QuebradaCuenca1-Bisley.csv
     - QuebradaCuenca2-Bisley.csv

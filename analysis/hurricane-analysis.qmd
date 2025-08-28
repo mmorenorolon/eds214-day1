@@ -11,10 +11,16 @@ execute:
 # Setup
 
 ```{r}
-source("environment/install_packages.R")
-source("scripts/01_clean_data.R")
-source("scripts/02_moving_avg.R")
-source("scripts/utils_plotting.R")
+#Load libraries
+library(lubridate)
+library(here)
+library(tidyverse)
+library(janitor)
+library(ggplot2)
+
+source(here("R", "01_clean_data.R"))
+source(here("R", "02_moving_avg.R"))
+source(here("R", "utils_plotting.R"))
 ```
 
 # Import raw dataset
@@ -22,8 +28,51 @@ source("scripts/utils_plotting.R")
 ```{r}
 # Import raw datasets
 q1 <- read_csv(here("raw_data", "QuebradaCuenca1-Bisley.csv"), na = "NA")
-q2 <- read_csv(here("raw_data", "QuebradaCuenca2-Bisley2.csv"), na = "NA")
+q2 <- read_csv(here("raw_data", "QuebradaCuenca2-Bisley.csv"), na = "NA")
 q3 <- read_csv(here("raw_data", "QuebradaCuenca3-Bisley.csv"), na = "NA")
 mpr <- read_csv(here("raw_data", "RioMameyesPuenteRoto.csv"), na = "NA")
+```
+
+# Clean data + subset
+```{r}
+q1_clean <- clean_data(q1)
+q2_clean <- clean_data(q2)
+q3_clean <- clean_data(q3)
+mpr_clean <- clean_data(mpr)
+
+```
+
+# Import datasets into processed data files
+
+```{r}
+write_csv(q1_clean, here("processed_data", "q1_clean.csv"))
+write_csv(q2_clean, here("processed_data", "q2_clean.csv"))
+write_csv(q3_clean, here("processed_data", "q3_clean.csv"))
+write_csv(mpr_clean, here("processed_data", "mpr_clean.csv"))
+```
+
+#Join each dataset
+```{r}
+all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>% 
+  rename(site_id = sample_id) #rename the first column
+```
+
+#Calculate the 9-week moving average of concentrations from 1988 to 1994
+```{r}
+moving_avg_streams <- all_streams %>% 
+  filter(sample_date >= '1988-01-10', sample_date < '1994-07-31') %>% 
+  arrange(sample_date, stream_ion) %>% 
+  group_by(stream_ion, site_id) %>% 
+  mutate(stream_ma = sapply(sample_date, moving_average, dates = sample_date,
+                            conc = ion_conc,
+                            win_size_wks = 9)) # from R/02_moving_average.R
+```
+
+#Plot the data
+```{r}
+figure_3 <- plot_streams(smoothed_data)  # from scripts/utils_plotting.R
+figure_3
+ggsave(here("output", "plotted_figure3.png", figure_3, width = 9, height= 7))
+
 ```
 
