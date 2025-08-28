@@ -58,16 +58,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="hurricane-analysis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="hurricane-analysis_files/libs/quarto-html/quarto.js"></script>
-<script src="hurricane-analysis_files/libs/quarto-html/popper.min.js"></script>
-<script src="hurricane-analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="hurricane-analysis_files/libs/quarto-html/anchor.min.js"></script>
-<link href="hurricane-analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="hurricane-analysis_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="hurricane-analysis_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="hurricane-analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="hurricane-analysis_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="paper_files/libs/clipboard/clipboard.min.js"></script>
+<script src="paper_files/libs/quarto-html/quarto.js"></script>
+<script src="paper_files/libs/quarto-html/popper.min.js"></script>
+<script src="paper_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="paper_files/libs/quarto-html/anchor.min.js"></script>
+<link href="paper_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="paper_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="paper_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="paper_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="paper_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -103,8 +103,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="setup" class="level1">
-<h1>Setup</h1>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>In this step, we loaded all the packages needed to run the document effectively. In addition, we sourced the functions created to clean the data frame, calculate the 9-week moving average, and plot the final result.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
@@ -118,8 +119,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"R"</span>, <span class="st">"plotting.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="import-raw-dataset" class="level1">
-<h1>Import raw dataset</h1>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>This section imports the raw datasets required to replicate the figure and are saved as objects.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import raw datasets</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"raw_data"</span>, <span class="st">"QuebradaCuenca1-Bisley.csv"</span>), <span class="at">na =</span> <span class="st">"NA"</span>)</span>
@@ -128,8 +130,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mpr <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"raw_data"</span>, <span class="st">"RioMameyesPuenteRoto.csv"</span>), <span class="at">na =</span> <span class="st">"NA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="clean-data-subset" class="level1">
-<h1>Clean data + subset</h1>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="clean-raw-data-files" class="level2">
+<h2 class="anchored" data-anchor-id="clean-raw-data-files">1. Clean raw data files</h2>
+<p>The data wrangling method involved cleaning each dataset individually and saving them as separate objects. The process composed of: - selecting the variables needed to calculate and plot the moving average. - pivoting the data frame in long format so that the resulting table contains the ions observed in one column and their respective values in a separate column. - making sure that the sample_date column is in <date> format - filtering out the rows where the ion concentration values were NA - changing variable name format to lowercase_snake.</date></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>q1_clean <span class="ot">&lt;-</span> <span class="fu">clean_data</span>(q1)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>q2_clean <span class="ot">&lt;-</span> <span class="fu">clean_data</span>(q2)</span>
@@ -137,8 +142,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>mpr_clean <span class="ot">&lt;-</span> <span class="fu">clean_data</span>(mpr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="import-datasets-into-processed-data-files" class="level1">
-<h1>Import datasets into processed data files</h1>
+<section id="import-datasets-into-processed-data-files" class="level2">
+<h2 class="anchored" data-anchor-id="import-datasets-into-processed-data-files">2. Import datasets into processed data files</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(q1_clean, <span class="fu">here</span>(<span class="st">"processed_data"</span>, <span class="st">"q1_clean.csv"</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(q2_clean, <span class="fu">here</span>(<span class="st">"processed_data"</span>, <span class="st">"q2_clean.csv"</span>))</span>
@@ -146,15 +151,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(mpr_clean, <span class="fu">here</span>(<span class="st">"processed_data"</span>, <span class="st">"mpr_clean.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="join-each-dataset" class="level1">
-<h1>Join each dataset</h1>
+<section id="join-each-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="join-each-dataset">3. Join each dataset</h2>
+<p>We joined each data frame by row and renamed the sample_id column to site_id for a more intuitive understanding of what the variable is.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_streams <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">list</span>(q1_clean, q2_clean, q3_clean, mpr_clean)) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">site_id =</span> sample_id) <span class="co">#rename the first column</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="calculate-the-9-week-moving-average-of-concentrations-from-1988-to-1994" class="level1">
-<h1>Calculate the 9-week moving average of concentrations from 1988 to 1994</h1>
+<section id="calculate-the-9-week-moving-average-of-concentrations-from-1988-to-1994" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-the-9-week-moving-average-of-concentrations-from-1988-to-1994">4. Calculate the 9-week moving average of concentrations from 1988 to 1994</h2>
+<p>To prepare the data to generate the final result, we used the joined data frame and filtered it for the year before the hurricane event and the years after. Next, the dataframe was arranged for the rows of the dates by the ions column. The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the result of the moving average claculation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>moving_avg_streams <span class="ot">&lt;-</span> all_streams <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sample_date <span class="sc">&gt;=</span> <span class="st">'1988-01-10'</span>, sample_date <span class="sc">&lt;</span> <span class="st">'1994-07-31'</span>) <span class="sc">%&gt;%</span> </span>
@@ -165,15 +172,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">win_size_wks =</span> <span class="dv">9</span>)) <span class="co"># from R/02_moving_average.R</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot-the-data" class="level1">
-<h1>Plot the data</h1>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>figure_3 <span class="ot">&lt;-</span> <span class="fu">plot_figure3</span>(moving_avg_streams)  <span class="co">#from R/plotting.R</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>figure_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hurricane-analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="paper_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

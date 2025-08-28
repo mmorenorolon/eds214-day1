@@ -2,7 +2,7 @@
 #'
 #' @param df 
 #'
-#' @returns dataframe stored as clean_data
+#' @returns clean_data
 #' @export
 #'
 #' @examples 

@@ -8,8 +8,10 @@ execute:
   message: false
 ---
 
-# Setup
+# Background
 
+In this step, we loaded all the packages needed to run the document effectively.
+In addition, we sourced the functions created to clean the data frame, calculate the 9-week moving average, and plot the final result. 
 ```{r}
 #Load packages
 library(lubridate)
@@ -23,8 +25,10 @@ source(here("R", "02_moving_average.R"))
 source(here("R", "plotting.R"))
 ```
 
-# Import raw dataset
+# Data
 
+This section imports the raw datasets required to replicate the
+figure and are saved as objects.
 ```{r}
 # Import raw datasets
 q1 <- read_csv(here("raw_data", "QuebradaCuenca1-Bisley.csv"), na = "NA")
@@ -33,7 +37,18 @@ q3 <- read_csv(here("raw_data", "QuebradaCuenca3-Bisley.csv"), na = "NA")
 mpr <- read_csv(here("raw_data", "RioMameyesPuenteRoto.csv"), na = "NA")
 ```
 
-# Clean data + subset
+# Methods
+
+## 1. Clean raw data files
+
+The data wrangling method involved cleaning each dataset individually and saving 
+them as separate objects. The process composed of:
+- selecting the variables needed to calculate and plot the moving average. 
+- pivoting the data frame in long format so that the resulting table contains the ions observed in one column and their respective values in a separate column. 
+- making sure that the sample_date column is in <date> format
+- filtering out the rows where the ion concentration values were NA
+- changing variable name format to lowercase_snake.
+
 ```{r}
 q1_clean <- clean_data(q1)
 q2_clean <- clean_data(q2)
@@ -42,7 +57,7 @@ mpr_clean <- clean_data(mpr)
 
 ```
 
-# Import datasets into processed data files
+## 2. Import datasets into processed data files
 
 ```{r}
 write_csv(q1_clean, here("processed_data", "q1_clean.csv"))
@@ -51,13 +66,20 @@ write_csv(q3_clean, here("processed_data", "q3_clean.csv"))
 write_csv(mpr_clean, here("processed_data", "mpr_clean.csv"))
 ```
 
-# Join each dataset
+## 3. Join each dataset
+
+We joined each data frame by row and renamed the sample_id column to site_id 
+for a more intuitive understanding of what the variable is. 
 ```{r}
 all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>% 
   rename(site_id = sample_id) #rename the first column
 ```
 
-# Calculate the 9-week moving average of concentrations from 1988 to 1994
+## 4. Calculate the 9-week moving average of concentrations from 1988 to 1994
+
+To prepare the data to generate the final result, we used the joined data frame
+and filtered it for the year before the hurricane event and the years after. Next, the dataframe was arranged for the rows of the dates by the ions column.
+The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the result of the moving average claculation. 
 ```{r}
 moving_avg_streams <- all_streams %>% 
   filter(sample_date >= '1988-01-10', sample_date < '1994-07-31') %>% 
@@ -68,7 +90,8 @@ moving_avg_streams <- all_streams %>%
                             win_size_wks = 9)) # from R/02_moving_average.R
 ```
 
-# Plot the data
+# Results
+
 ```{r}
 figure_3 <- plot_figure3(moving_avg_streams)  #from R/plotting.R
 figure_3
