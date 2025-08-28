@@ -68,6 +68,11 @@ b. Click the Render button in the RStudio toolbar.
   <img src="images/flowchart.png" alt="Figure 3" width="500"/>
 </p>
 
+### Final Result 
+
+<p align="center">
+  <img src="output/plotted_figure3.png" alt="Figure 3" width="500"/>
+</p>
 
 ### Data Access
 
