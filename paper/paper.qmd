@@ -13,7 +13,7 @@ execute:
 In this step, we loaded all the packages needed to run the document effectively.
 In addition, we sourced the functions created to clean the data frame, calculate the 9-week moving average, and plot the final result. 
 ```{r}
-#Load packages
+# Load packages
 library(lubridate)
 library(here)
 library(tidyverse)
@@ -54,7 +54,6 @@ q1_clean <- clean_data(q1)
 q2_clean <- clean_data(q2)
 q3_clean <- clean_data(q3)
 mpr_clean <- clean_data(mpr)
-
 ```
 
 ## 2. Import datasets into processed data files
@@ -71,8 +70,8 @@ write_csv(mpr_clean, here("processed_data", "mpr_clean.csv"))
 We joined each data frame by row and renamed the sample_id column to site_id 
 for a more intuitive understanding of what the variable is. 
 ```{r}
-all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>% 
-  rename(site_id = sample_id) #rename the first column
+all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>%
+  rename(site_id = sample_id) # rename the first column
 ```
 
 ## 4. Calculate the 9-week moving average of concentrations from 1988 to 1994
@@ -81,22 +80,23 @@ To prepare the data to generate the final result, we used the joined data frame
 and filtered it for the year before the hurricane event and the years after. Next, the dataframe was arranged for the rows of the dates by the ions column.
 The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the result of the moving average claculation. 
 ```{r}
-moving_avg_streams <- all_streams %>% 
-  filter(sample_date >= '1988-01-10', sample_date < '1994-07-31') %>% 
-  arrange(sample_date, stream_ion) %>% 
-  group_by(stream_ion, site_id) %>% 
-  mutate(stream_ma = sapply(sample_date, moving_average, dates = sample_date,
-                            conc = ion_conc,
-                            win_size_wks = 9)) # from R/02_moving_average.R
+moving_avg_streams <- all_streams %>%
+  filter(sample_date >= "1988-01-10", sample_date < "1994-07-31") %>%
+  arrange(sample_date, stream_ion) %>%
+  group_by(stream_ion, site_id) %>%
+  mutate(stream_ma = sapply(sample_date, moving_average,
+    dates = sample_date,
+    conc = ion_conc,
+    win_size_wks = 9
+  )) # from R/02_moving_average.R
 ```
 
 # Results
 
 ```{r}
-figure_3 <- plot_figure3(moving_avg_streams)  #from R/plotting.R
+figure_3 <- plot_figure3(moving_avg_streams) # from R/plotting.R
 figure_3
 ggsave(here("output", "plotted_figure3.png"), figure_3,
-       width = 9, height= 7)
-
+  width = 9, height = 7
+)
 ```
-
