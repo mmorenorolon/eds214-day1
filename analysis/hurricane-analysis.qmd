@@ -11,7 +11,7 @@ execute:
 # Setup
 
 ```{r}
-#Load libraries
+#Load packages
 library(lubridate)
 library(here)
 library(tidyverse)
@@ -19,8 +19,8 @@ library(janitor)
 library(ggplot2)
 
 source(here("R", "01_clean_data.R"))
-source(here("R", "02_moving_avg.R"))
-source(here("R", "utils_plotting.R"))
+source(here("R", "02_moving_average.R"))
+source(here("R", "plotting.R"))
 ```
 
 # Import raw dataset
@@ -51,13 +51,13 @@ write_csv(q3_clean, here("processed_data", "q3_clean.csv"))
 write_csv(mpr_clean, here("processed_data", "mpr_clean.csv"))
 ```
 
-#Join each dataset
+# Join each dataset
 ```{r}
 all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>% 
   rename(site_id = sample_id) #rename the first column
 ```
 
-#Calculate the 9-week moving average of concentrations from 1988 to 1994
+# Calculate the 9-week moving average of concentrations from 1988 to 1994
 ```{r}
 moving_avg_streams <- all_streams %>% 
   filter(sample_date >= '1988-01-10', sample_date < '1994-07-31') %>% 
@@ -68,11 +68,12 @@ moving_avg_streams <- all_streams %>%
                             win_size_wks = 9)) # from R/02_moving_average.R
 ```
 
-#Plot the data
+# Plot the data
 ```{r}
-figure_3 <- plot_streams(smoothed_data)  # from scripts/utils_plotting.R
+figure_3 <- plot_figure3(moving_avg_streams)  #from R/plotting.R
 figure_3
-ggsave(here("output", "plotted_figure3.png", figure_3, width = 9, height= 7))
+ggsave(here("output", "plotted_figure3.png"), figure_3,
+       width = 9, height= 7)
 
 ```
 

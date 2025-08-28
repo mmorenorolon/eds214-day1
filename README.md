@@ -35,7 +35,7 @@
     - q3_clean.csv
   - R/
     - 01_clean_data.R
-    - 02_moving_avg.R
+    - 02_moving_average.R
     - plotting.R
   - raw_data/
     - QuebradaCuenca1-Bisley.csv
@@ -55,13 +55,7 @@
 #### 1. Clone this repository
 Create a version-controlled RStudio project by cloning the repository from GitHub. 
 
-#### 2. Install the following packages
-
-Run the following command in the **Console**:
-```
-source("packages/install_packages.R")
-```
-#### 3. Render the Quarto document
+#### 2. Render the Quarto document
 
 a. Open ```analysis/hurricane_analysis.qmd```.
 b. Click the Render button in the RStudio toolbar.

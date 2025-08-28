@@ -1,26 +1,15 @@
-plot_figure <- function(df, x, y) {
-  ggplot(df, aes(x, y, color = site_id, linetype = site_id)) +
-    geom_line(size = 0.8, alpha = 0.9) +
-    facet_wrap(~stream_ion, ncol = 1, scales = "free_y") +
-    scale_color_brewer(palette = "Dark2") +
-    scale_linetype_manual(values = c(
-      "q1" = "dashed",
-      "q2" = "dotdash",
-      "g3" = "twodash",
-      "mpr" = "solid"  # solid line for one stream
-    )) +
+plot_figure3 <- function(df) {
+  ggplot(df, aes(x = sample_date, y = stream_ma, color = site_id)) +
+    geom_line(na.rm = FALSE) +
+    geom_vline(xintercept = as.Date("1989-09-18"), linetype = "dashed", color = "black") +  #marking the date that Hurricane Hugo struck Puerto Rico
+    facet_wrap(~ stream_ion, scales = "free_y", ncol =1,
+               strip.position = "left") +   # stack plots vertically and show y axis names on the left side of the plot. 
     labs(
-      title = "Ion Concentrations Over Time by Stream",
-      x = "Year",
-      y = "Concentration",
-      color = "site_id",
-      linetype = "site_id"
+      x = "Years",
+      y = "Moving Average Concentration"
     ) +
-    theme_light(base_size = 14) +
-    theme(
-      strip.text = element_text(face = "bold"),
-      legend.position = "bottom",
-      panel.spacing = unit(1, "lines")
-    )
-  
+    theme_light() +
+  theme(panel.spacing = unit(0, "lines"),#get rid of spacing between plots
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank()) 
 }
