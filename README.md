@@ -106,7 +106,7 @@ The Workflow of this project is linear, reflecting a step-by-step approach to da
 - Processing each dataset through a cleaning function to ensure consistency.
 - Merging the cleaned datasets into a single processsed dataset, subsetted to the ions of interest (K, NO3-N, Mg, Ca, NH4-N).
 - Computing the 9-week moving average of these ion concentrations. This method facilitates a better interpretation of the hydrologic trends of these streams. 
-- Plotting the time-series of this data and exporting it to ```output/``` for further analysis.
+- Plotting the time-series of this data and exporting it to ```outputs/``` for further analysis.
 
 
 ### Final Result 
