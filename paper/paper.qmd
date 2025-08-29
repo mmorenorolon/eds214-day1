@@ -10,16 +10,14 @@ execute:
 
 # Background
 
+This analysis reproduces Figure 3 from Schaefer et al. (2000).
+To meet this end, we focused on chemistry changes in Bisley streams (Q1, Q2, Q3, MPR) before and after Hurricane Hugo by highlighting trends in five ions: potassium, nitrate-N, magnesium, calcium, and ammonium-N.
+
 In this step, we loaded all the packages needed to run the document effectively.
 In addition, we sourced the functions created to clean the data frame, calculate the 9-week moving average, and plot the final result. 
 ```{r}
-# Load packages
-library(lubridate)
-library(here)
-library(tidyverse)
-library(janitor)
-library(ggplot2)
-
+#Download and load packages
+source(here::here("environment", "install_packages.R"))
 source(here("R", "01_clean_data.R"))
 source(here("R", "02_moving_average.R"))
 source(here("R", "plotting.R"))
@@ -92,7 +90,7 @@ moving_avg_streams <- all_streams %>%
 ```
 
 # Results
-The reproduced figure shows similar patterns to Schaefer et al. (2000), with clear post-hurricane disturbances in nutrient concentrations across Bisley streams.
+The reproduced figure shows similar patterns to Schaefer et al. (2000) Figure 3., with clear post-hurricane disturbances in nutrient concentrations across Bisley streams. 
 ```{r}
 figure_3 <- plot_figure3(moving_avg_streams) # from R/plotting.R
 figure_3

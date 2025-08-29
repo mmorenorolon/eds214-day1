@@ -21,31 +21,39 @@
 ### Repository Structure
 ```
 - hurricane-streams/
-  - analysis/
-    - hurricane_analysis.qmd
-  - images/
+  - docs/                    #rendered project and supported files
+    - paper_files
+    - paper.html
+  - environment/             #environment initialization script
+    - install_packages.R
+  - images/                  #visual assets for the README.md
     - fig3.png
     - flowchart.png
-  - output/
+  - output/                  #final exported figure
     -plotted_figure3.png
-  - processed_data
+  - paper/                   #final script
+    - quarto.yml
+    - paper.qmd
+  - processed_data/          #cleaned datasets
     - mpr_clean.csv
     - q1_clean.csv
     - q2_clean.csv
     - q3_clean.csv
-  - R/
+  - R/                     #source files for each step of analysis
     - 01_clean_data.R
     - 02_moving_average.R
     - plotting.R
-  - raw_data/
+  - raw_data/             #original datasets
     - QuebradaCuenca1-Bisley.csv
     - QuebradaCuenca2-Bisley.csv
     - QuebradaCuenca3-Bisley.csv
     - RioMameyesPuenteRoto.csv
   - README.html
   - README.md
-  - scratch
+  - scratch/              #experimental code
+    - spaghetti.R
 ```
+> Note: Markdown files related to course assessments are excluded from this structure since they are not part of the core analysis.
 
 ### How to Run the Analysis
 
@@ -67,6 +75,15 @@ b. Click the Render button in the RStudio toolbar.
 <p align="center">
   <img src="images/flowchart.png" alt="Figure 3" width="500"/>
 </p>
+
+The Workflow of this project is linear, reflecting a step-by-step approach to data processing. The work consists of: 
+
+- Reading in and storing the raw data (Q1, Q2, Q3, MPR) in the ```raw_data/``` directory.
+- Processing each dataset through a cleaning function to ensure consistency.
+- Merging the cleaned datasets into a single processsed dataset, subsetted to the ions of interest (K, NO3-N, Mg, Ca, NH4-N).
+- Computing the 9-week moving average of these ion concentrations. This method facilitates a better interpretation of the hydrologic trends of these streams. 
+- Plotting the time-series of this data and exporting it to ```output/``` for further analysis.
+
 
 ### Final Result 
 

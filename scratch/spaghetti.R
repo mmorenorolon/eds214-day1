@@ -7,6 +7,12 @@ library(tidyverse)
 library(here)
 library(janitor)
 
+#creating function for loading packages
+if (!require("ggplot2")) {
+  install.packages("ggplot2")
+  library("ggplot2")
+}
+  
 
 # In data
 
@@ -54,17 +60,31 @@ q2_raw %>%
 
 window_size <- 9
 
-moving_avg <- function(conc, date, focal_date, window_size){
-  
-  in_window <- (dates > focal_date - (window_size/2)* 7) &
-    (dates < focal_date + (window_size/2)*7) 
-  
-  window_conc
+moving_average <- function(focal_date, dates, conc, win_size_wks) {
+  is_in_window <- (dates > focal_date - (win_size_wks / 2) * 7) &
+    (dates < focal_date + (win_size_wks / 2) * 7)
+  window_conc <- conc[is_in_window]
+  result <- mean(window_conc)
+  return(result)
 }
 
 
-subset for plotting
- %>% 
+#plotting
+ 
   
-
+plot_figure3 <- function(df) {
+  ggplot(df, aes(x = sample_date, y = stream_ma, color = site_id)) +
+    geom_line(na.rm = FALSE) +
+    geom_vline(xintercept = as.Date("1989-09-18"), linetype = "dashed", color = "black") +  #marking the date that Hurricane Hugo struck Puerto Rico
+    facet_wrap(~ stream_ion, scales = "free_y", ncol =1,
+               strip.position = "left") +   # stack plots vertically and show y axis names on the left side of the plot. 
+    labs(
+      x = "Years",
+      y = "Moving Average Concentration"
+    ) +
+    theme_light() +
+    theme(panel.spacing = unit(0, "lines"),#get rid of spacing between plots
+          panel.grid.minor = element_blank(),
+          panel.grid.major = element_blank()) 
+}
 
