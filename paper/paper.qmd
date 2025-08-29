@@ -16,8 +16,10 @@ To meet this end, we focused on chemistry changes in Bisley streams (Q1, Q2, Q3,
 In this step, we loaded all the packages needed to run the document effectively.
 In addition, we sourced the functions created to clean the data frame, calculate the 9-week moving average, and plot the final result. 
 ```{r} 
-#Download and load packages
+#download and load packages
 source(here::here("environment", "install_packages.R"))
+
+#import functions
 source(here("R", "01_clean_data.R"))
 source(here("R", "02_moving_average.R"))
 source(here("R", "plotting.R"))
@@ -26,9 +28,9 @@ source(here("R", "plotting.R"))
 # Data
 
 This section imports the raw datasets required to replicate the
-figure and are saved as objects.
+figure and are saved as objects. 
 ```{r}
-# Import raw datasets
+#import raw datasets
 q1 <- read_csv(here("raw_data", "QuebradaCuenca1-Bisley.csv"), na = "NA")
 q2 <- read_csv(here("raw_data", "QuebradaCuenca2-Bisley.csv"), na = "NA")
 q3 <- read_csv(here("raw_data", "QuebradaCuenca3-Bisley.csv"), na = "NA")
@@ -37,10 +39,12 @@ mpr <- read_csv(here("raw_data", "RioMameyesPuenteRoto.csv"), na = "NA")
 
 # Methods
 
+![Figure 3](../images/flowchart.png)
+
 ## 1. Clean raw data files
 
-The data wrangling method involved cleaning each dataset individually and saving 
-them as separate objects. The process composed of:
+The data wrangling method involved cleaning each dataset individually and saving them as separate objects. The process composed of:
+
 - selecting the variables needed to calculate and plot the moving average. 
 - pivoting the data frame in long format so that the resulting table contains the ions observed in one column and their respective values in a separate column. 
 - making sure that the sample_date column is in <date> format
@@ -54,7 +58,7 @@ q3_clean <- clean_data(q3)
 mpr_clean <- clean_data(mpr)
 ```
 
-## 2. Import datasets into processed data files
+## 2. Save datasets into processed data files
 
 ```{r}
 write_csv(q1_clean, here("processed_data", "q1_clean.csv"))
@@ -68,25 +72,30 @@ write_csv(mpr_clean, here("processed_data", "mpr_clean.csv"))
 We joined each data frame by row and renamed the sample_id column to site_id 
 for a more intuitive understanding of what the variable is. 
 ```{r}
-all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>%
-  rename(site_id = sample_id) # rename the first column
+all_streams <- bind_rows(list(q1_clean, 
+                              q2_clean, 
+                              q3_clean, 
+                              mpr_clean)
+                         ) %>%
+  rename(site_id = sample_id)
 ```
 
 ## 4. Calculate the 9-week moving average of concentrations from 1988 to 1994
 
 To prepare the data to generate the final result, we used the joined data frame
 and filtered it for the year before the hurricane event and the years after. Next, the dataframe was arranged for the rows of the dates by the ions column.
-The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the result of the moving average calculation. 
+The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the results of the moving average calculation. 
 ```{r}
 moving_avg_streams <- all_streams %>%
   filter(sample_date >= "1988-01-10", sample_date < "1994-07-31") %>%
-  arrange(sample_date, stream_ion) %>%
+  arrange(sample_date) %>%
   group_by(stream_ion, site_id) %>%
-  mutate(stream_ma = sapply(sample_date, moving_average,
-    dates = sample_date,
-    conc = ion_conc,
-    win_size_wks = 9
-  )) # from R/02_moving_average.R
+  mutate(stream_ma = sapply(sample_date, 
+                            moving_average,
+                            dates = sample_date,
+                            conc = ion_conc,
+                            win_size_wks = 9)
+         ) # from R/02_moving_average.R
 ```
 
 # Results
