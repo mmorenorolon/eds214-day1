@@ -52,10 +52,11 @@ The data wrangling method involved cleaning each dataset individually and saving
 - changing variable name format to lowercase_snake.
 
 ```{r}
-q1_clean <- clean_data(q1)
-q2_clean <- clean_data(q2)
-q3_clean <- clean_data(q3)
-mpr_clean <- clean_data(mpr)
+# q1_clean <- clean_data(q1)
+# q2_clean <- clean_data(q2)
+# q3_clean <- clean_data(q3)
+# mpr_clean <- clean_data(mpr)
+source(here("scripts", "02_clean_data_.R"))
 ```
 
 ## 2. Save datasets into processed data files
