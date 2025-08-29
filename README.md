@@ -29,7 +29,7 @@
   - images/                  #visual assets for the README.md
     - fig3.png
     - flowchart.png
-  - output/                  #final exported figure
+  - outputs/                  #final exported figure
     -plotted_figure3.png
   - paper/                   #final script
     - quarto.yml
@@ -54,6 +54,30 @@
     - spaghetti.R
 ```
 > Note: Markdown files related to course assessments are excluded from this structure since they are not part of the core analysis.
+
+### Repository Guide
+
+#### Data:
+
+- The ```raw_data/``` folder holds the original datasets, while the cleaned datasets are saved in the ```processed_data/``` folder.
+
+#### B. Analysis Script:
+
+- The main Quarto file ```(paper/paper.qmd)``` runs the full workflow to reproduces Figure 3.
+
+#### Supporting Code:
+
+- The functions for cleaning, calculating moving averages, and plotting are in the ```R/``` folder.
+
+- The environment initialization script (```environment/install_packages.R```) installs and loads the required packages.
+
+#### Outputs:
+
+- The final rendered Quarto document is saved in ```paper/```.
+
+- The GitHub page is saved in ```docs/```.
+
+- The reproduced figure is saved in ```outputs/plotted_figure3.png```.
 
 ### How to Run the Analysis
 
@@ -88,7 +112,7 @@ The Workflow of this project is linear, reflecting a step-by-step approach to da
 ### Final Result 
 
 <p align="center">
-  <img src="output/plotted_figure3.png" alt="Figure 3" width="500"/>
+  <img src="outputs/plotted_figure3.png" alt="Figure 3" width="500"/>
 </p>
 
 ### Data Access

@@ -5,8 +5,10 @@ output: html_document
 
 #Exceeds specs
 
-## 
+## Running the entire analysis requires rendering one Quarto document
 
+I set up the .qmd file so that rendering it runs the whole pipeline and also made it clear in the README how a user can reproduce the results.
 
-## 
-In 1-2 sentences, describe how your work for that spec is of professional quality. Note: you will get feedback about this and have an opportunity to make revisions. This is the start of a conversation, not a one-and-done attempt.
+## At least one piece of functionality has been refactored into a function in its own file
+
+I moved key code into a 3 functions and saved them as their own files. This makes the workflow easier to reuse.  

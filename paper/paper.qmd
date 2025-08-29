@@ -15,7 +15,7 @@ To meet this end, we focused on chemistry changes in Bisley streams (Q1, Q2, Q3,
 
 In this step, we loaded all the packages needed to run the document effectively.
 In addition, we sourced the functions created to clean the data frame, calculate the 9-week moving average, and plot the final result. 
-```{r}
+```{r} 
 #Download and load packages
 source(here::here("environment", "install_packages.R"))
 source(here("R", "01_clean_data.R"))
@@ -76,7 +76,7 @@ all_streams <- bind_rows(list(q1_clean, q2_clean, q3_clean, mpr_clean)) %>%
 
 To prepare the data to generate the final result, we used the joined data frame
 and filtered it for the year before the hurricane event and the years after. Next, the dataframe was arranged for the rows of the dates by the ions column.
-The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the result of the moving average claculation. 
+The data frame was then grouped by the stream ion and the site id, so that the moving average ion concentrations can be calculated for those categories. Finally, a new column is created with the result of the moving average calculation. 
 ```{r}
 moving_avg_streams <- all_streams %>%
   filter(sample_date >= "1988-01-10", sample_date < "1994-07-31") %>%
@@ -94,7 +94,7 @@ The reproduced figure shows similar patterns to Schaefer et al. (2000) Figure 3.
 ```{r}
 figure_3 <- plot_figure3(moving_avg_streams) # from R/plotting.R
 figure_3
-ggsave(here("output", "plotted_figure3.png"), figure_3,
+ggsave(here("outputs", "plotted_figure3.png"), figure_3,
   width = 9, height = 7
 )
 ```

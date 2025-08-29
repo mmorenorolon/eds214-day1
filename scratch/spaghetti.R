@@ -87,4 +87,3 @@ plot_figure3 <- function(df) {
           panel.grid.minor = element_blank(),
           panel.grid.major = element_blank()) 
 }
-
