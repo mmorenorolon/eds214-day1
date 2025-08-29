@@ -92,7 +92,7 @@ moving_avg_streams <- all_streams %>%
 ```
 
 # Results
-
+The reproduced figure shows similar patterns to Schaefer et al. (2000), with clear post-hurricane disturbances in nutrient concentrations across Bisley streams.
 ```{r}
 figure_3 <- plot_figure3(moving_avg_streams) # from R/plotting.R
 figure_3
