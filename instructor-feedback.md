@@ -48,6 +48,9 @@ This is the commit on GitHub where I added the line of code that produced the me
 [NY] **Data import/cleaning is handled in its own script(s)**
 
 - On lines 23-25 your source the data handling scripts, but then you repeat the steps throughout paper.qmd. Isolate those steps outide of paper.qmd to meet the spec. Those scripts should not go in R/, that should only contain function definitions.
+- You made a lot of good progress in your revisions! Some code is still in confusing places, though. To clarify:
+  - `R/` should contain .R files that _define functions_ only. E.g., `scripts/03_moving_average.R` should be `R/moving_average.R`.
+  - `scripts/` should contain .R files _use functions to perform the analysis_. These files typically produce _intermediate outputs_. E.g., `scripts/01_import_raw_data.R` should read the raw CSV files (which it currently does), but then it should save the result to `outputs/` as either a CSV or RDS file. Then, `paper/paper.qmd` should perform the analysis by picking up where the files in `scripts/` left off, using functions defined in `R/` appropriately. E.g., if `scripts/02_clean_data.R` created `outputs/streams_cleaned.rds` and `R/plotting.R` defines `plot_figure3()`, then `paper/paper.qmd` would read the RDS file and call the plotting function. `paper/paper.qmd` _would not_ repeat the data cleaning and processing steps. In this case, those steps are fast, so it doesn't really matter. But in the future when you're dealing with larger datasets, those steps might take hours or days, so you don't want to repeat them unneccessarily. 
 
 ## Organize
 
